@@ -1,0 +1,10 @@
+/.env
+
+/dist
+/node_modules
+/logs
+/tmp
+/uploads
+/backups
+/cache
+/logs

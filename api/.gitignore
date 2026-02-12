@@ -1,0 +1,16 @@
+/.env
+
+/dist
+/node_modules
+/logs
+/tmp
+/public
+/uploads
+/backups
+/cache
+/logs
+/tmp
+/public
+/uploads
+/backups
+/cache
