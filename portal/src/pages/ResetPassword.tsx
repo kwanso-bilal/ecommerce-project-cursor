@@ -3,13 +3,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client/react';
-import { RESET_PASSWORD } from '../graphql/mutations/auth';
-import type { MessagePayload } from '../types/auth';
+import { useState } from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
+import { useNotification } from '../contexts/NotificationContext';
+import { resetPassword } from '../services/api';
 
 const schema = z
   .object({
@@ -26,10 +30,11 @@ type FormData = z.infer<typeof schema>;
 export function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') ?? '';
-
-  const [resetPassword, { loading, data, error }] = useMutation<{
-    resetPassword: MessagePayload;
-  }>(RESET_PASSWORD);
+  const { showSuccess, showError } = useNotification();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const {
     register,
@@ -40,17 +45,27 @@ export function ResetPassword() {
     defaultValues: { newPassword: '', confirmPassword: '' },
   });
 
-  const onSubmit = (input: FormData) => {
-    resetPassword({
-      variables: { input: { token, newPassword: input.newPassword } },
-    });
+  const onSubmit = async (input: FormData) => {
+    setLoading(true);
+    const { data, error } = await resetPassword({ token, newPassword: input.newPassword });
+    setLoading(false);
+    if (error) {
+      showError(error.message);
+      return;
+    }
+    if (data?.success) {
+      setSuccess(true);
+      showSuccess(data.message ?? 'Password reset successfully.');
+    }
   };
 
   if (!token) {
     return (
-      <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
-        <Typography color="error">Missing or invalid reset token.</Typography>
-        <Link component={RouterLink} to="/forgot-password" sx={{ mt: 2, display: 'block' }}>
+      <Box sx={{ width: '100%', maxWidth: 400 }}>
+        <Typography color="error" sx={{ mb: 2 }}>
+          Missing or invalid reset token.
+        </Typography>
+        <Link component={RouterLink} to="/forgot-password">
           Request a new reset link
         </Link>
       </Box>
@@ -58,12 +73,15 @@ export function ResetPassword() {
   }
 
   return (
-    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ width: '100%', maxWidth: 400 }}>
+      <Typography variant="authTitle" sx={{ mb: 0.5 }}>
         Reset password
       </Typography>
-      {data?.resetPassword?.success ? (
-        <Typography color="text.secondary">
+      <Typography variant="authSubtitle">
+        Enter your new password below
+      </Typography>
+      {success ? (
+        <Typography variant="body2">
           Your password has been reset. You can now log in.
         </Typography>
       ) : (
@@ -71,40 +89,57 @@ export function ResetPassword() {
           <TextField
             {...register('newPassword')}
             label="New password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             fullWidth
-            margin="normal"
             error={!!errors.newPassword}
             helperText={errors.newPassword?.message}
             autoComplete="new-password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowPassword((p) => !p)}
+                    edge="end"
+                    size="small"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            margin="normal"
           />
           <TextField
             {...register('confirmPassword')}
             label="Confirm password"
-            type="password"
+            type={showConfirm ? 'text' : 'password'}
             fullWidth
-            margin="normal"
             error={!!errors.confirmPassword}
             helperText={errors.confirmPassword?.message}
             autoComplete="new-password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowConfirm((p) => !p)}
+                    edge="end"
+                    size="small"
+                  >
+                    {showConfirm ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            margin="normal"
           />
-          {error && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              {error.message}
-            </Typography>
-          )}
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            disabled={loading}
-            sx={{ mt: 2 }}
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={{ mt: 2 }}>
             {loading ? 'Resetting...' : 'Reset password'}
           </Button>
         </form>
       )}
-      <Typography sx={{ mt: 2 }}>
+      <Typography sx={{ mt: 2.5 }}>
         <Link component={RouterLink} to="/login">
           Back to login
         </Link>

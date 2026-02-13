@@ -3,17 +3,26 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import type { ReactNode } from 'react';
+import { Link as RouterLink, useNavigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { useNotification } from '../contexts/NotificationContext';
 
-interface LayoutProps {
-  children: ReactNode;
-}
+export function Layout() {
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+  const { showSuccess } = useNotification();
 
-export function Layout({ children }: LayoutProps) {
+  const handleLogout = () => {
+    logout();
+    showSuccess('Signed out successfully.');
+    navigate('/', { replace: true });
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="static">
@@ -21,9 +30,18 @@ export function Layout({ children }: LayoutProps) {
           <IconButton color="inherit" edge="start" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
-          <Typography component="span" variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography component={RouterLink} to="/" variant="h6" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
             eCommerce
           </Typography>
+          {isAuthenticated() ? (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : (
+            <Button component={RouterLink} to="/login" color="inherit">
+              Login
+            </Button>
+          )}
           <IconButton color="inherit" aria-label="search">
             <SearchIcon />
           </IconButton>
@@ -33,7 +51,7 @@ export function Layout({ children }: LayoutProps) {
         </Toolbar>
       </AppBar>
       <Container component="main" sx={{ flex: 1, py: 3 }}>
-        {children}
+        <Outlet />
       </Container>
       <Box
         component="footer"

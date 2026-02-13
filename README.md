@@ -1,70 +1,36 @@
 # eCommerce Project
 
-Full-stack eCommerce application with a NestJS GraphQL API and a React (Vite) portal.
+Front-end eCommerce application (React + Vite) using **mock REST APIs**. all data is fetched from public mock services (DummyJSON, etc.).
 
 ## Structure
 
-| Directory | Stack | Description |
-|-----------|--------|--------------|
-| **api** | NestJS, TypeORM, GraphQL, PostgreSQL | Backend: auth, database, GraphQL API |
-| **portal** | React, Vite, MUI, Apollo Client | Frontend: auth UI, routing, GraphQL client |
+| Directory  | Stack                          | Description                                                             |
+| ---------- | ------------------------------ | ----------------------------------------------------------------------- |
+| **portal** | React, Vite, MUI, REST (fetch) | Frontend: auth UI, routing, mock REST API layer, snackbar notifications |
 
 ## Prerequisites
 
 - Node.js 18+
-- PostgreSQL
 - npm
 
 ## Environment
 
-### API (`api/`)
-
-Copy `api/.env.example` to `api/.env` and set:
-
-```env
-PORT=3000
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=password
-DATABASE_NAME=ecommerce-project-cursor
-JWT_SECRET=your-secret
-```
-
-Optional: `FRONTEND_VERIFY_URL`, `MAIL_*` for verification emails.
-
 ### Portal (`portal/`)
 
-Copy `portal/.env.example` to `portal/.env` and set:
+Copy `portal/.env.example` to `portal/.env` if you need to override the mock API base URL (optional). By default, the app uses public mock APIs (e.g. DummyJSON).
 
 ```env
-VITE_GRAPHQL_URI=http://localhost:3000/graphql
+# Optional: override base URL for mock REST APIs
+# VITE_API_BASE_URL=https://dummyjson.com
 ```
 
 ## Setup
 
 ```bash
-# API
-cd api && npm install
-
-# Portal
 cd portal && npm install
 ```
 
-Create the database (e.g. `ecommerce-project-cursor`) in PostgreSQL before running the API.
-
 ## Run
-
-**Terminal 1 – API**
-
-```bash
-cd api
-npm run start:dev
-```
-
-GraphQL: `http://localhost:3000/graphql`
-
-**Terminal 2 – Portal**
 
 ```bash
 cd portal
@@ -73,52 +39,43 @@ npm run dev
 
 App: `http://localhost:5173` (or the port Vite prints).
 
-## Database seeding
-
-From the `api` folder:
-
-```bash
-npm run seed
-```
-
-This builds the API and runs all seeders (e.g. test users). Re-running is safe; existing data is skipped.
-
-- **Seed all:** `npm run seeds` (run after `npm run build` if needed)
-- **Seed one:** `npm run seed:specific -- UserSeeder`
-
 ## Build
 
 ```bash
-# API
-cd api && npm run build
-
-# Portal
 cd portal && npm run build
 ```
 
-Production API: `cd api && npm run start:prod` (run after build).
+Preview production build: `cd portal && npm run preview`.
 
-## Auth (API)
+## Mock REST APIs
 
-GraphQL mutations:
+- **Auth (login):** [DummyJSON Auth](https://dummyjson.com/docs/auth) – e.g. `POST https://dummyjson.com/auth/login` (username/password). The portal maps email → username for demo.
+- **Auth (sign up):** DummyJSON `POST /users/add`; the app then returns a mock token and user.
+- **Forgot / reset password, verify email:** Simulated in the app with mock success responses (no real email).
 
-- `signUp`, `login`, `forgotPassword`, `resetPassword`, `verifyEmail`
-- Query: `health`
+All API calls go through `portal/src/services/api.ts` (GET/POST/PUT/DELETE as appropriate).
 
-JWT is returned on login; send as `Authorization: Bearer <token>` for protected operations.
+## Notifications
+
+Snackbar (toast) notifications are shown for:
+
+- Successful login / sign up / logout
+- Successful forgot password, reset password, email verification
+- API errors
+
+Implemented via `NotificationContext` and MUI `Snackbar` (auto-hide, success/error styling).
 
 ## Portal routes
 
-| Route | Page |
-|-------|------|
-| `/` | Home |
-| `/login` | Login |
-| `/signup` | Sign up |
-| `/forgot-password` | Forgot password |
-| `/reset-password?token=...` | Reset password |
-| `/verify-email?token=...` | Verify email |
+| Route                       | Page            |
+| --------------------------- | --------------- |
+| `/`                         | Home            |
+| `/login`                    | Login           |
+| `/signup`                   | Sign up         |
+| `/forgot-password`          | Forgot password |
+| `/reset-password?token=...` | Reset password  |
+| `/verify-email?token=...`   | Verify email    |
 
 ## Tech summary
 
-- **API:** NestJS, TypeORM, PostgreSQL, GraphQL (Apollo), JWT, Passport, bcrypt, typeorm-extension (seeding)
-- **Portal:** React 19, Vite, TypeScript, MUI, Apollo Client, React Router, React Hook Form, Zod
+- **Portal:** React 19, Vite, TypeScript, MUI, REST (fetch), React Router, React Hook Form, Zod, Snackbar notifications. No GraphQL, Apollo, NestJS, or backend.
