@@ -17,17 +17,19 @@ import IconButton from "@mui/material/IconButton";
 import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../hooks/useAuth";
 import { login } from "../services/api";
+import { ROUTES } from "../constants/routes";
+import { Buttons, Auth, Messages, VALIDATION } from "../constants";
 
 const schema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().min(1, VALIDATION.MESSAGES.EMAIL_REQUIRED).email(VALIDATION.MESSAGES.EMAIL_INVALID),
+  password: z.string().min(1, VALIDATION.MESSAGES.PASSWORD_REQUIRED),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export function Login() {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { setToken, setUser } = useAuth();
   const { showSuccess, showError } = useNotification();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -50,28 +52,28 @@ export function Login() {
       return;
     }
     if (data?.accessToken) {
-      localStorage.setItem("auth_token", data.accessToken);
+      setToken(data.accessToken);
       setUser({
         id: data.user.id,
         email: data.user.email,
         name: data.user.name,
         role: "Super Admin",
       });
-      showSuccess("Signed in successfully.");
-      navigate("/dashboard", { replace: true });
+      showSuccess(Messages.SIGNED_IN_SUCCESS);
+      navigate(ROUTES.DASHBOARD, { replace: true });
     }
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 400 }}>
+    <Box sx={(theme) => theme.custom.authForm.container}>
       <Typography variant="authTitle" display="block">
-        Sign in to Refinery
+        {Auth.SIGN_IN_TITLE}
       </Typography>
-      <Typography variant="authSubtitle">Enter your details below</Typography>
+      <Typography variant="authSubtitle">{Auth.ENTER_DETAILS_BELOW}</Typography>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <TextField
           {...register("email")}
-          label="Email address"
+          label={Auth.EMAIL_ADDRESS}
           type="email"
           fullWidth
           error={!!errors.email}
@@ -81,7 +83,7 @@ export function Login() {
         />
         <TextField
           {...register("password")}
-          label="Password"
+          label={Auth.PASSWORD}
           type={showPassword ? "text" : "password"}
           fullWidth
           error={!!errors.password}
@@ -91,7 +93,7 @@ export function Login() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                   onClick={() => setShowPassword((p) => !p)}
                   edge="end"
                   size="small"
@@ -104,7 +106,7 @@ export function Login() {
           margin="normal"
         />
         <Box
-          sx={{
+          sx={(theme) => ({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -112,18 +114,18 @@ export function Login() {
             gap: 1,
             mt: 2,
             mb: 2,
-          }}
+          })}
         >
           <FormControlLabel
             control={<Checkbox defaultChecked />}
             label={
               <Typography variant="body2" color="text.primary">
-                Remember me
+                {Auth.REMEMBER_ME}
               </Typography>
             }
           />
-          <Link component={RouterLink} to="/forgot-password">
-            Forgot password?
+          <Link component={RouterLink} to={ROUTES.FORGOT_PASSWORD}>
+            {Auth.FORGOT_PASSWORD_LINK}
           </Link>
         </Box>
         <Button
@@ -133,13 +135,13 @@ export function Login() {
           fullWidth
           disabled={loading}
         >
-          {loading ? "Signing in..." : "Login"}
+          {loading ? Buttons.LOGIN_LOADING : Buttons.LOGIN}
         </Button>
       </form>
-      <Typography variant="body2" sx={{ mt: 2.5 }}>
-        Don&apos;t have an account?{" "}
-        <Link component={RouterLink} to="/signup">
-          Sign up
+      <Typography variant="body2" sx={(theme) => theme.custom.authForm.subtitle}>
+        {Auth.DONT_HAVE_ACCOUNT}{" "}
+        <Link component={RouterLink} to={ROUTES.SIGNUP}>
+          {Buttons.SIGN_UP}
         </Link>
       </Typography>
     </Box>

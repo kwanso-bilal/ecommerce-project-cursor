@@ -18,6 +18,45 @@ const yellowMain = '#ca8a04';
 const chartYellow = '#eab308';
 
 declare module '@mui/material/styles' {
+  interface Theme {
+    custom: {
+      layout: {
+        root: { display: string; flexDirection: string; minHeight: string };
+        main: { flex: number; py: number };
+        footer: { py: number; px: number; mt: string };
+        authRoot: { minHeight: string; display: string; flexDirection: string; bgcolor: string };
+        authHeader: { p: number };
+        authBody: { flex: number; display: string; alignItems: string; justifyContent: string; px: number; py: number };
+      };
+      authForm: {
+        container: { width: string; maxWidth: number };
+        actions: { marginTop: number };
+        subtitle: { marginTop: number };
+      };
+      authFormNarrow: { maxWidth: number };
+      verifyBox: { width: string; maxWidth: number; textAlign: string };
+      verifyTitle: { marginBottom: number; fontWeight: number };
+      homeActions: { marginTop: number };
+      homeButton: { marginRight: number };
+      sidebar: {
+        width: number;
+        flexShrink: number;
+        py: number;
+        px: number;
+        logo: { px: number; mb: number };
+        userBlock: { px: number; mb: number };
+        userAvatar: { width: number; height: number; borderRadius: string; fontWeight: number; fontSize: string };
+        navSection: { mb: number };
+        navItem: { py: number; px: number; borderRadius: number; fontSize: string };
+        logoutBlock: { px: number; pt: number };
+        logoutButton: Record<string, unknown>;
+      };
+      dashboardContent: { padding: number };
+    };
+  }
+  interface ThemeOptions {
+    custom?: Partial<Theme['custom']>;
+  }
   interface TypographyVariants {
     authTitle: React.CSSProperties;
     authSubtitle: React.CSSProperties;
@@ -261,6 +300,48 @@ export const theme = createTheme({
   },
   breakpoints: {
     values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1536 },
+  },
+  custom: {
+    layout: {
+      root: { display: 'flex', flexDirection: 'column', minHeight: '100vh' },
+      main: { flex: 1, py: 3 },
+      footer: { py: 2, px: 2, mt: 'auto' },
+      authRoot: { minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' },
+      authHeader: { p: 3 },
+      authBody: { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, py: 4 },
+    },
+    authForm: {
+      container: { width: '100%', maxWidth: 400 },
+      actions: { marginTop: 2 },
+      subtitle: { marginTop: 2.5 },
+    },
+    authFormNarrow: { maxWidth: 500 },
+    verifyBox: { width: '100%', maxWidth: 400, textAlign: 'center' as const },
+    verifyTitle: { marginBottom: 2, fontWeight: 500 },
+    homeActions: { marginTop: 2 },
+    homeButton: { marginRight: 1 },
+    sidebar: {
+      width: 260,
+      flexShrink: 0,
+      py: 2,
+      px: 2,
+      logo: { px: 3, mb: 2 },
+      userBlock: { px: 2, mb: 2 },
+      userAvatar: { width: 40, height: 40, borderRadius: '50%', fontWeight: 600, fontSize: '0.875rem' },
+      navSection: { mb: 2 },
+      navItem: { py: 1.25, px: 1.5, borderRadius: 1, fontSize: '0.9375rem' },
+      logoutBlock: { px: 2, pt: 2 },
+      logoutButton: {
+        justifyContent: 'center',
+        textTransform: 'none',
+        py: 1.25,
+        borderRadius: 2,
+        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+        fontWeight: 500,
+        '&:hover': { boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)' },
+      },
+    },
+    dashboardContent: { padding: 3 },
   },
 });
 

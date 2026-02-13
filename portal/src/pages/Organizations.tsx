@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { getOrganizations, type Organization } from '../services/dashboardApi';
 import { useNotification } from '../contexts/NotificationContext';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Organizations() {
   const { showError } = useNotification();
@@ -31,18 +32,18 @@ export function Organizations() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Organizations
+        {DashboardText.ORGANIZATIONS}
       </Typography>
       <Card>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Organization Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Employees</TableCell>
-              <TableCell>City</TableCell>
-              <TableCell>Country</TableCell>
+              <TableCell>{DashboardText.ORGANIZATION_NAME}</TableCell>
+              <TableCell>{DashboardText.EMAIL}</TableCell>
+              <TableCell>{DashboardText.DEPARTMENT}</TableCell>
+              <TableCell>{DashboardText.EMPLOYEES}</TableCell>
+              <TableCell>{DashboardText.CITY}</TableCell>
+              <TableCell>{DashboardText.COUNTRY}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -50,7 +51,7 @@ export function Organizations() {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Loading...
+                    {DashboardText.LOADING}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -58,7 +59,7 @@ export function Organizations() {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    No organizations found.
+                    {DashboardText.NO_ORGANIZATIONS}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -68,7 +69,7 @@ export function Organizations() {
                   <TableCell sx={{ fontWeight: 500 }}>{org.name}</TableCell>
                   <TableCell>{org.email}</TableCell>
                   <TableCell>{org.department}</TableCell>
-                  <TableCell>{org.employees?.toLocaleString() ?? 'N/A'}</TableCell>
+                  <TableCell>{org.employees?.toLocaleString() ?? DashboardText.N_A}</TableCell>
                   <TableCell>{org.city}</TableCell>
                   <TableCell>{org.country}</TableCell>
                 </TableRow>

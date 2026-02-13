@@ -6,6 +6,8 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNotification } from '../contexts/NotificationContext';
 import { verifyEmail } from '../services/api';
+import { ROUTES } from '../constants/routes';
+import { Buttons, Messages, Errors } from '../constants';
 
 export function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -33,8 +35,8 @@ export function VerifyEmail() {
       }
       if (data?.success) {
         setVerified(true);
-        setMessage(data.message ?? 'Email verified successfully.');
-        showSuccess(data.message ?? 'Email verified successfully.');
+        setMessage(data.message ?? Messages.EMAIL_VERIFIED_SUCCESS);
+        showSuccess(data.message ?? Messages.EMAIL_VERIFIED_SUCCESS);
       }
     })();
     return () => {
@@ -44,12 +46,12 @@ export function VerifyEmail() {
 
   if (!token) {
     return (
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+      <Box sx={(theme) => theme.custom.verifyBox}>
         <Typography color="error" sx={{ mb: 2 }}>
-          Missing verification token.
+          {Errors.MISSING_VERIFICATION_TOKEN}
         </Typography>
-        <Button component={RouterLink} to="/login" variant="contained" color="primary">
-          Go to login
+        <Button component={RouterLink} to={ROUTES.LOGIN} variant="contained" color="primary">
+          {Buttons.GO_TO_LOGIN}
         </Button>
       </Box>
     );
@@ -57,32 +59,32 @@ export function VerifyEmail() {
 
   if (loading) {
     return (
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
-        <Typography color="text.secondary">Verifying your email...</Typography>
+      <Box sx={(theme) => theme.custom.verifyBox}>
+        <Typography color="text.secondary">{Messages.VERIFYING_EMAIL}</Typography>
       </Box>
     );
   }
 
   if (verified === true) {
     return (
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
-        <Typography color="success.main" sx={{ fontWeight: 500, mb: 2 }}>
-          {message ?? 'Email verified successfully.'}
+      <Box sx={(theme) => theme.custom.verifyBox}>
+        <Typography color="success.main" sx={(theme) => theme.custom.verifyTitle}>
+          {message ?? Messages.EMAIL_VERIFIED_SUCCESS}
         </Typography>
-        <Button component={RouterLink} to="/login" variant="contained" color="primary">
-          Go to login
+        <Button component={RouterLink} to={ROUTES.LOGIN} variant="contained" color="primary">
+          {Buttons.GO_TO_LOGIN}
         </Button>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+    <Box sx={(theme) => theme.custom.verifyBox}>
       <Typography color="error" sx={{ mb: 2 }}>
-        Invalid or expired verification link.
+        {Errors.INVALID_VERIFICATION_LINK}
       </Typography>
-      <Link component={RouterLink} to="/login">
-        Back to login
+      <Link component={RouterLink} to={ROUTES.LOGIN}>
+        {Buttons.BACK_TO_LOGIN}
       </Link>
     </Box>
   );

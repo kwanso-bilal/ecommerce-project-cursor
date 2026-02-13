@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { getOrders, type Order } from '../services/dashboardApi';
 import { useNotification } from '../contexts/NotificationContext';
 import { dashboardPalette } from '../theme/theme';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Orders() {
   const { showError } = useNotification();
@@ -33,17 +34,17 @@ export function Orders() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Orders
+        {DashboardText.ORDERS}
       </Typography>
       <Card>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order Number</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Customer ID</TableCell>
-              <TableCell>Date</TableCell>
+              <TableCell>{DashboardText.ORDER_NUMBER}</TableCell>
+              <TableCell>{DashboardText.DESCRIPTION}</TableCell>
+              <TableCell>{DashboardText.STATUS}</TableCell>
+              <TableCell>{DashboardText.CUSTOMER_ID}</TableCell>
+              <TableCell>{DashboardText.DATE}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -51,7 +52,7 @@ export function Orders() {
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Loading...
+                    {DashboardText.LOADING}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -59,7 +60,7 @@ export function Orders() {
               <TableRow>
                 <TableCell colSpan={5} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    No orders found.
+                    {DashboardText.NO_ORDERS}
                   </Typography>
                 </TableCell>
               </TableRow>

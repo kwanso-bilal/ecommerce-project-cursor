@@ -15,16 +15,18 @@ import IconButton from "@mui/material/IconButton";
 import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../hooks/useAuth";
 import { signUp } from "../services/api";
+import { ROUTES } from "../constants/routes";
+import { Buttons, Auth, Messages, VALIDATION } from "../constants";
 
 const schema = z
   .object({
-    email: z.string().min(1, "Email is required").email("Invalid email"),
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    email: z.string().min(1, VALIDATION.MESSAGES.EMAIL_REQUIRED).email(VALIDATION.MESSAGES.EMAIL_INVALID),
+    name: z.string().min(2, VALIDATION.MESSAGES.NAME_MIN_LENGTH),
+    password: z.string().min(8, VALIDATION.MESSAGES.PASSWORD_MIN_LENGTH),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: VALIDATION.MESSAGES.PASSWORDS_DO_NOT_MATCH,
     path: ["confirmPassword"],
   });
 
@@ -32,7 +34,7 @@ type FormData = z.infer<typeof schema>;
 
 export function SignUp() {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { setToken, setUser } = useAuth();
   const { showSuccess, showError } = useNotification();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -60,28 +62,28 @@ export function SignUp() {
       return;
     }
     if (data?.accessToken) {
-      localStorage.setItem("auth_token", data.accessToken);
+      setToken(data.accessToken);
       setUser({
         id: data.user.id,
         email: data.user.email,
         name: data.user.name,
         role: "Super Admin",
       });
-      showSuccess("Account created successfully.");
-      navigate("/dashboard", { replace: true });
+      showSuccess(Messages.ACCOUNT_CREATED_SUCCESS);
+      navigate(ROUTES.DASHBOARD, { replace: true });
     }
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 400 }}>
+    <Box sx={(theme) => theme.custom.authForm.container}>
       <Typography variant="authTitle" display="block">
-        Create your account
+        {Auth.CREATE_ACCOUNT_TITLE}
       </Typography>
-      <Typography variant="authSubtitle">Enter your details below</Typography>
+      <Typography variant="authSubtitle">{Auth.ENTER_DETAILS_BELOW}</Typography>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <TextField
           {...register("email")}
-          label="Email address"
+          label={Auth.EMAIL_ADDRESS}
           type="email"
           fullWidth
           error={!!errors.email}
@@ -91,7 +93,7 @@ export function SignUp() {
         />
         <TextField
           {...register("name")}
-          label="Full name"
+          label={Auth.FULL_NAME}
           fullWidth
           error={!!errors.name}
           helperText={errors.name?.message}
@@ -100,7 +102,7 @@ export function SignUp() {
         />
         <TextField
           {...register("password")}
-          label="Password"
+          label={Auth.PASSWORD}
           type={showPassword ? "text" : "password"}
           fullWidth
           error={!!errors.password}
@@ -110,7 +112,7 @@ export function SignUp() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                   onClick={() => setShowPassword((p) => !p)}
                   edge="end"
                   size="small"
@@ -124,7 +126,7 @@ export function SignUp() {
         />
         <TextField
           {...register("confirmPassword")}
-          label="Confirm password"
+          label={Auth.CONFIRM_PASSWORD}
           type={showConfirmPassword ? "text" : "password"}
           fullWidth
           error={!!errors.confirmPassword}
@@ -135,7 +137,7 @@ export function SignUp() {
               <InputAdornment position="end">
                 <IconButton
                   aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
+                    showConfirmPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD
                   }
                   onClick={() => setShowConfirmPassword((p) => !p)}
                   edge="end"
@@ -154,15 +156,15 @@ export function SignUp() {
           color="primary"
           fullWidth
           disabled={loading}
-          sx={{ mt: 2 }}
+          sx={(theme) => theme.custom.authForm.actions}
         >
-          {loading ? "Creating account..." : "Create account"}
+          {loading ? Buttons.CREATE_ACCOUNT_LOADING : Buttons.CREATE_ACCOUNT}
         </Button>
       </form>
-      <Typography variant="body2" sx={{ mt: 2.5 }}>
-        Already have an account?{" "}
-        <Link component={RouterLink} to="/login">
-          Login
+      <Typography variant="body2" sx={(theme) => theme.custom.authForm.subtitle}>
+        {Auth.ALREADY_HAVE_ACCOUNT}{" "}
+        <Link component={RouterLink} to={ROUTES.LOGIN}>
+          {Buttons.LOGIN}
         </Link>
       </Typography>
     </Box>

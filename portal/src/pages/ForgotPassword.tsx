@@ -10,9 +10,11 @@ import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { useNotification } from "../contexts/NotificationContext";
 import { forgotPassword } from "../services/api";
+import { ROUTES } from "../constants/routes";
+import { Buttons, Auth, Messages, VALIDATION } from "../constants";
 
 const schema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
+  email: z.string().min(1, VALIDATION.MESSAGES.EMAIL_REQUIRED).email(VALIDATION.MESSAGES.EMAIL_INVALID),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -41,28 +43,27 @@ export function ForgotPassword() {
     }
     if (data?.success) {
       setSuccess(true);
-      showSuccess(data.message ?? "Reset instructions sent.");
+      showSuccess(data.message ?? Messages.RESET_INSTRUCTIONS_SENT);
     }
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 400 }}>
+    <Box sx={(theme) => theme.custom.authForm.container}>
       <Typography variant="authTitle" display="block">
-        Forgot password
+        {Auth.FORGOT_PASSWORD_TITLE}
       </Typography>
       <Typography variant="authSubtitle">
-        Enter your email and we&apos;ll send you a reset link
+        {Auth.FORGOT_PASSWORD_SUBTITLE}
       </Typography>
       {success ? (
         <Typography variant="body2">
-          If an account exists for that email, we&apos;ve sent instructions to
-          reset your password. Check your inbox.
+          {Messages.RESET_EMAIL_SENT}
         </Typography>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <TextField
             {...register("email")}
-            label="Email address"
+            label={Auth.EMAIL_ADDRESS}
             type="email"
             fullWidth
             error={!!errors.email}
@@ -76,15 +77,15 @@ export function ForgotPassword() {
             color="primary"
             fullWidth
             disabled={loading}
-            sx={{ mt: 2 }}
+            sx={(theme) => theme.custom.authForm.actions}
           >
-            {loading ? "Sending..." : "Send reset link"}
+            {loading ? Buttons.SEND_RESET_LINK_LOADING : Buttons.SEND_RESET_LINK}
           </Button>
         </form>
       )}
-      <Typography sx={{ mt: 2.5 }}>
-        <Link component={RouterLink} to="/login">
-          Back to login
+      <Typography sx={(theme) => theme.custom.authForm.subtitle}>
+        <Link component={RouterLink} to={ROUTES.LOGIN}>
+          {Buttons.BACK_TO_LOGIN}
         </Link>
       </Typography>
     </Box>

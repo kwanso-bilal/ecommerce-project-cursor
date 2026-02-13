@@ -12,6 +12,7 @@ import { getReviews, type Review } from '../services/dashboardApi';
 import { useNotification } from '../contexts/NotificationContext';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { dashboardPalette } from '../theme/theme';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Reviews() {
   const { showError } = useNotification();
@@ -44,16 +45,16 @@ export function Reviews() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Reviews
+        {DashboardText.REVIEWS}
       </Typography>
       <Card>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Reviewer</TableCell>
-              <TableCell>Comment</TableCell>
-              <TableCell>Product ID</TableCell>
-              <TableCell>Likes</TableCell>
+              <TableCell>{DashboardText.REVIEWER}</TableCell>
+              <TableCell>{DashboardText.COMMENT}</TableCell>
+              <TableCell>{DashboardText.PRODUCT_ID}</TableCell>
+              <TableCell>{DashboardText.LIKES}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -61,7 +62,7 @@ export function Reviews() {
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Loading...
+                    {DashboardText.LOADING}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -69,7 +70,7 @@ export function Reviews() {
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    No reviews found.
+                    {DashboardText.NO_REVIEWS}
                   </Typography>
                 </TableCell>
               </TableRow>

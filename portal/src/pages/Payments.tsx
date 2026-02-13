@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { getPayments, type Payment } from '../services/dashboardApi';
 import { useNotification } from '../contexts/NotificationContext';
 import { dashboardPalette } from '../theme/theme';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Payments() {
   const { showError } = useNotification();
@@ -46,18 +47,18 @@ export function Payments() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Payments
+        {DashboardText.PAYMENTS}
       </Typography>
       <Card>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Transaction ID</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Payment Method</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>User ID</TableCell>
+              <TableCell>{DashboardText.TRANSACTION_ID}</TableCell>
+              <TableCell>{DashboardText.AMOUNT}</TableCell>
+              <TableCell>{DashboardText.STATUS}</TableCell>
+              <TableCell>{DashboardText.PAYMENT_METHOD}</TableCell>
+              <TableCell>{DashboardText.DATE}</TableCell>
+              <TableCell>{DashboardText.USER_ID}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -65,7 +66,7 @@ export function Payments() {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Loading...
+                    {DashboardText.LOADING}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -73,7 +74,7 @@ export function Payments() {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    No payments found.
+                    {DashboardText.NO_PAYMENTS}
                   </Typography>
                 </TableCell>
               </TableRow>

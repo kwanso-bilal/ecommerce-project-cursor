@@ -32,6 +32,7 @@ import {
   type RecentInvoice,
 } from '../services/dashboardApi';
 import { dashboardPalette } from '../theme/theme';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -47,7 +48,7 @@ export function Dashboard() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Hi, Welcome back
+        {DashboardText.HI_WELCOME_BACK}
       </Typography>
 
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
@@ -68,7 +69,7 @@ export function Dashboard() {
               <BusinessIcon color="primary" sx={{ fontSize: 28 }} />
             </Box>
             <Typography variant="cardValue">{stats?.registeredOrganizations ?? '—'}</Typography>
-            <Typography variant="body2">Registered Organizations</Typography>
+            <Typography variant="body2">{DashboardText.REGISTERED_ORGANIZATIONS}</Typography>
           </CardContent>
         </Card>
         <Card sx={{ flex: '1 1 200px', minWidth: 200, backgroundColor: dashboardPalette.cardBlue }}>
@@ -88,7 +89,7 @@ export function Dashboard() {
               <AttachMoneyIcon sx={{ color: dashboardPalette.cardBlueIconColor, fontSize: 28 }} />
             </Box>
             <Typography variant="cardValue">{stats?.totalRevenue ?? '—'}</Typography>
-            <Typography variant="body2">Total Revenue</Typography>
+            <Typography variant="body2">{DashboardText.TOTAL_REVENUE}</Typography>
           </CardContent>
         </Card>
         <Card sx={{ flex: '1 1 200px', minWidth: 200, backgroundColor: dashboardPalette.cardYellow }}>
@@ -108,7 +109,7 @@ export function Dashboard() {
               <WarningAmberIcon sx={{ color: 'warning.main', fontSize: 28 }} />
             </Box>
             <Typography variant="cardValue">{stats?.ordersProcessedToday ?? '—'}</Typography>
-            <Typography variant="body2">Orders Processed Today</Typography>
+            <Typography variant="body2">{DashboardText.ORDERS_PROCESSED_TODAY}</Typography>
           </CardContent>
         </Card>
       </Box>
@@ -127,15 +128,15 @@ export function Dashboard() {
                 borderBottom: `1px solid ${dashboardPalette.cardBorder}`,
               }}
             >
-              <Typography variant="sectionTitle">REVENUE</Typography>
+              <Typography variant="sectionTitle">{DashboardText.REVENUE}</Typography>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: dashboardPalette.chartLastYear }} />
-                  <Typography variant="caption">Last Year Revenue</Typography>
+                  <Typography variant="caption">{DashboardText.LAST_YEAR_REVENUE}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: 'primary.main' }} />
-                  <Typography variant="caption">This Year Revenue</Typography>
+                  <Typography variant="caption">{DashboardText.THIS_YEAR_REVENUE}</Typography>
                 </Box>
               </Box>
             </Box>
@@ -185,17 +186,17 @@ export function Dashboard() {
                 borderBottom: `1px solid ${dashboardPalette.cardBorder}`,
               }}
             >
-              <Typography variant="sectionTitle">RECENT INVOICES</Typography>
-              <IconButton size="small" aria-label="Expand">
+              <Typography variant="sectionTitle">{DashboardText.RECENT_INVOICES}</Typography>
+              <IconButton size="small" aria-label={DashboardText.EXPAND}>
                 <OpenInFullIcon fontSize="small" />
               </IconButton>
             </Box>
             <Table size="small" sx={{ flex: 1 }}>
               <TableHead>
                 <TableRow sx={{ backgroundColor: dashboardPalette.tableHeaderBg }}>
-                  <TableCell>Company Name</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell align="right">Amount</TableCell>
+                  <TableCell>{DashboardText.COMPANY_NAME}</TableCell>
+                  <TableCell>{DashboardText.DATE}</TableCell>
+                  <TableCell align="right">{DashboardText.AMOUNT}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

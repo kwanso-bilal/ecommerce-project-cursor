@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
-
-const AUTH_TOKEN_KEY = 'auth_token';
-const AUTH_USER_KEY = 'auth_user';
+import { STORAGE_KEYS } from '../constants';
 
 export interface StoredAuthUser {
   id: string;
@@ -11,17 +9,17 @@ export interface StoredAuthUser {
 }
 
 export function useAuth() {
-  const getToken = useCallback(() => localStorage.getItem(AUTH_TOKEN_KEY), []);
+  const getToken = useCallback(() => localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN), []);
   const setToken = useCallback((token: string | null) => {
     if (token) {
-      localStorage.setItem(AUTH_TOKEN_KEY, token);
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
     } else {
-      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     }
   }, []);
   const getUser = useCallback((): StoredAuthUser | null => {
     try {
-      const raw = localStorage.getItem(AUTH_USER_KEY);
+      const raw = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
       if (!raw) return null;
       return JSON.parse(raw) as StoredAuthUser;
     } catch {
@@ -30,9 +28,9 @@ export function useAuth() {
   }, []);
   const setUser = useCallback((user: StoredAuthUser | null) => {
     if (user) {
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+      localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(user));
     } else {
-      localStorage.removeItem(AUTH_USER_KEY);
+      localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     }
   }, []);
   const isAuthenticated = useCallback(() => !!getToken(), [getToken]);

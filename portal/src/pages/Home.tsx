@@ -3,21 +3,23 @@ import { Link, Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useAuth } from '../hooks/useAuth';
+import { ROUTES } from '../constants/routes';
+import { Buttons, General } from '../constants';
 
 export function Home() {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated()) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
   return (
     <Box>
-      <Typography variant="h1">Home</Typography>
-      <Box sx={{ mt: 2 }}>
-        <Button component={Link} to="/login" variant="outlined" sx={{ mr: 1 }}>
-          Login
+      <Typography variant="h1">{General.HOME}</Typography>
+      <Box sx={(theme) => theme.custom.homeActions}>
+        <Button component={Link} to={ROUTES.LOGIN} variant="outlined" sx={(theme) => theme.custom.homeButton}>
+          {Buttons.LOGIN}
         </Button>
-        <Button component={Link} to="/signup" variant="outlined">
-          Sign up
+        <Button component={Link} to={ROUTES.SIGNUP} variant="outlined">
+          {Buttons.SIGN_UP}
         </Button>
       </Box>
     </Box>

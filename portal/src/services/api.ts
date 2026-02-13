@@ -3,8 +3,9 @@
  * Auth: DummyJSON (https://dummyjson.com/docs/auth)
  * Other data: JSONPlaceholder / DummyJSON as needed.
  */
+import { CONFIG, Errors } from '../constants';
 
-const DUMMY_JSON_BASE = 'https://dummyjson.com';
+const API_BASE = CONFIG.API_BASE;
 
 export type ApiError = { message: string; status?: number };
 
@@ -45,14 +46,14 @@ async function request<T>(
     if (!res.ok) {
       return {
         error: {
-          message: (json.message ?? json.error ?? 'Request failed') as string,
+          message: (json.message ?? json.error ?? Errors.REQUEST_FAILED) as string,
           status: res.status,
         },
       };
     }
     return { data: json as T };
   } catch (e) {
-    const message = e instanceof Error ? e.message : 'Network error';
+    const message = e instanceof Error ? e.message : Errors.NETWORK_ERROR;
     return { error: { message } };
   }
 }
@@ -63,7 +64,7 @@ async function request<T>(
 async function findUsernameByEmail(email: string): Promise<string | null> {
   const encoded = encodeURIComponent(email);
   const { data } = await request<{ users: Array<{ username: string }> }>(
-    `${DUMMY_JSON_BASE}/users/filter?key=email&value=${encoded}`
+    `${API_BASE}/users/filter?key=email&value=${encoded}`
   );
   const username = data?.users?.[0]?.username;
   return username ?? null;
@@ -84,7 +85,7 @@ export async function login(
     firstName: string;
     lastName: string;
     accessToken?: string;
-  }>(`${DUMMY_JSON_BASE}/auth/login`, {
+  }>(`${API_BASE}/auth/login`, {
     method: 'POST',
     body: JSON.stringify({ username, password }),
   });
@@ -99,7 +100,7 @@ export async function login(
         firstName: string;
         lastName: string;
         accessToken?: string;
-      }>(`${DUMMY_JSON_BASE}/auth/login`, {
+      }>(`${API_BASE}/auth/login`, {
         method: 'POST',
         body: JSON.stringify({ username: resolved, password }),
       });
@@ -149,7 +150,7 @@ export async function signUp(input: {
   const username = input.email.replace(/@.*/, '').replace(/\W/g, '') || 'user';
 
   const { data: userData, error: addError } = await request<{ id: number }>(
-    `${DUMMY_JSON_BASE}/users/add`,
+    `${API_BASE}/users/add`,
     {
       method: 'POST',
       body: JSON.stringify({

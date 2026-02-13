@@ -16,6 +16,9 @@ import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../contexts/NotificationContext';
 import { getSidebarMenu, type SidebarSection } from '../services/dashboardApi';
 import { dashboardPalette } from '../theme/theme';
+import { ROUTES } from '../constants/routes';
+import { CONFIG } from '../constants/config';
+import { Buttons, Messages, Labels } from '../constants';
 
 const iconMap: Record<string, ComponentType<{ sx?: object }>> = {
   dashboard: DashboardIcon,
@@ -51,56 +54,52 @@ export function DashboardLayout() {
   }, []);
 
   const user = getUser();
-  const displayName = user?.role ?? user?.name ?? 'User';
+  const displayName = user?.role ?? user?.name ?? Labels.USER;
   const initials = user?.name ? getInitials(user.name) : 'U';
 
   const handleLogout = () => {
     logout();
-    showSuccess('Signed out successfully.');
-    navigate('/login', { replace: true });
+    showSuccess(Messages.SIGNED_OUT_SUCCESS);
+    navigate(ROUTES.LOGIN, { replace: true });
   };
 
   if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: dashboardPalette.mainBg }}>
       <Box
-        sx={{
-          width: 260,
-          flexShrink: 0,
+        sx={(theme) => ({
+          width: theme.custom.sidebar.width,
+          flexShrink: theme.custom.sidebar.flexShrink,
           backgroundColor: dashboardPalette.sidebarBg,
           borderRight: `1px solid ${dashboardPalette.sidebarBorder}`,
           display: 'flex',
           flexDirection: 'column',
-          py: 2,
-        }}
+          py: theme.custom.sidebar.py,
+        })}
       >
         <Typography
           component={RouterLink}
-          to="/dashboard"
+          to={ROUTES.DASHBOARD}
           variant="sidebarLogo"
-          sx={{ px: 3, mb: 2, '&:hover': { color: 'text.primary' } }}
+          sx={(theme) => ({ ...theme.custom.sidebar.logo, '&:hover': { color: 'text.primary' } })}
         >
-          REFINERY
+          {CONFIG.DASHBOARD_BRAND}
         </Typography>
 
-        <Box sx={{ px: 2, mb: 2 }}>
+        <Box sx={(theme) => theme.custom.sidebar.userBlock}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1, px: 1.5, borderRadius: 1 }}>
             <Box
-              sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
+              sx={(theme) => ({
+                ...theme.custom.sidebar.userAvatar,
                 backgroundColor: dashboardPalette.sidebarBorder,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: 'text.primary',
-                fontWeight: 600,
-                fontSize: '0.875rem',
-              }}
+              })}
             >
               {initials}
             </Box>
@@ -112,7 +111,7 @@ export function DashboardLayout() {
 
         <Box sx={{ flex: 1, px: 1.5 }}>
           {menu.map((section) => (
-            <Box key={section.title} sx={{ mb: 2 }}>
+            <Box key={section.title} sx={(theme) => ({ mb: theme.custom.sidebar.navSection.mb })}>
               <Typography variant="sidebarSection" sx={{ px: 1.5, py: 0.5 }}>
                 {section.title}
               </Typography>
@@ -124,23 +123,20 @@ export function DashboardLayout() {
                     key={item.path}
                     component={RouterLink}
                     to={item.path}
-                    sx={{
+                    sx={(theme) => ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1.5,
-                      py: 1.25,
-                      px: 1.5,
-                      borderRadius: 1,
+                      ...theme.custom.sidebar.navItem,
                       textDecoration: 'none',
                       color: isActive ? 'text.primary' : 'text.secondary',
                       backgroundColor: isActive ? dashboardPalette.navActiveBg : 'transparent',
                       fontWeight: isActive ? 500 : 400,
-                      fontSize: '0.9375rem',
                       '&:hover': {
                         backgroundColor: isActive ? dashboardPalette.navActiveBg : dashboardPalette.navHoverBg,
                         color: 'text.primary',
                       },
-                    }}
+                    })}
                   >
                     <Icon sx={{ fontSize: 20, color: isActive ? 'primary.main' : 'text.secondary' }} />
                     {item.label}
@@ -151,35 +147,29 @@ export function DashboardLayout() {
           ))}
         </Box>
 
-        <Box sx={{ px: 2, pt: 2 }}>
+        <Box sx={(theme) => theme.custom.sidebar.logoutBlock}>
           <Button
             fullWidth
             startIcon={<LogoutIcon />}
             onClick={handleLogout}
-            sx={{
-              justifyContent: 'center',
-              textTransform: 'none',
+            sx={(theme) => ({
+              ...theme.custom.sidebar.logoutButton,
               color: dashboardPalette.logoutButtonText,
               backgroundColor: dashboardPalette.logoutButtonBg,
-              py: 1.25,
-              borderRadius: 2,
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-              fontWeight: 500,
               '& .MuiSvgIcon-root': {
                 color: dashboardPalette.logoutButtonText,
               },
               '&:hover': {
                 backgroundColor: dashboardPalette.logoutButtonBg,
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
               },
-            }}
+            })}
           >
-            Log Out
+            {Buttons.LOG_OUT}
           </Button>
         </Box>
       </Box>
 
-      <Box component="main" sx={{ flex: 1, overflow: 'auto', p: 3 }}>
+      <Box component="main" sx={(theme) => ({ flex: 1, overflow: 'auto', p: theme.custom.dashboardContent.padding })}>
         <Outlet />
       </Box>
     </Box>

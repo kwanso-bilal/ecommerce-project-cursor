@@ -12,15 +12,16 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import { useNotification } from '../contexts/NotificationContext';
 import { changePassword } from '../services/dashboardApi';
+import { Dashboard, Buttons, Auth, Messages, VALIDATION } from '../constants';
 
 const schema = z
   .object({
-    currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    currentPassword: z.string().min(1, VALIDATION.MESSAGES.CURRENT_PASSWORD_REQUIRED),
+    newPassword: z.string().min(8, VALIDATION.MESSAGES.PASSWORD_MIN_LENGTH),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: VALIDATION.MESSAGES.PASSWORDS_DO_NOT_MATCH,
     path: ['confirmPassword'],
   });
 
@@ -57,19 +58,19 @@ export function ChangePassword() {
     }
     if (data?.success) {
       setSuccess(true);
-      showSuccess(data.message ?? 'Password changed successfully.');
+      showSuccess(data.message ?? Messages.PASSWORD_CHANGED_SUCCESS);
       reset();
     }
   };
 
   if (success) {
     return (
-      <Box sx={{ maxWidth: 500 }}>
+      <Box sx={(theme) => theme.custom.authFormNarrow}>
         <Typography variant="h5" sx={{ mb: 2 }}>
-          Change Password
+          {Dashboard.CHANGE_PASSWORD_TITLE}
         </Typography>
         <Typography variant="body2" color="success.main" sx={{ mb: 2 }}>
-          Your password has been changed successfully.
+          {Dashboard.PASSWORD_CHANGED_SUCCESS}
         </Typography>
         <Button
           variant="contained"
@@ -79,21 +80,21 @@ export function ChangePassword() {
             reset();
           }}
         >
-          Change Password Again
+          {Buttons.CHANGE_PASSWORD_AGAIN}
         </Button>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ maxWidth: 500 }}>
+    <Box sx={(theme) => theme.custom.authFormNarrow}>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Change Password
+        {Dashboard.CHANGE_PASSWORD_TITLE}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <TextField
           {...register('currentPassword')}
-          label="Current password"
+          label={Auth.CURRENT_PASSWORD}
           type={showCurrentPassword ? 'text' : 'password'}
           fullWidth
           error={!!errors.currentPassword}
@@ -103,7 +104,7 @@ export function ChangePassword() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showCurrentPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                   onClick={() => setShowCurrentPassword((p) => !p)}
                   edge="end"
                   size="small"
@@ -117,7 +118,7 @@ export function ChangePassword() {
         />
         <TextField
           {...register('newPassword')}
-          label="New password"
+          label={Auth.NEW_PASSWORD}
           type={showNewPassword ? 'text' : 'password'}
           fullWidth
           error={!!errors.newPassword}
@@ -127,7 +128,7 @@ export function ChangePassword() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showNewPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                   onClick={() => setShowNewPassword((p) => !p)}
                   edge="end"
                   size="small"
@@ -141,7 +142,7 @@ export function ChangePassword() {
         />
         <TextField
           {...register('confirmPassword')}
-          label="Confirm new password"
+          label={Dashboard.CONFIRM_NEW_PASSWORD}
           type={showConfirmPassword ? 'text' : 'password'}
           fullWidth
           error={!!errors.confirmPassword}
@@ -151,7 +152,7 @@ export function ChangePassword() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showConfirmPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                   onClick={() => setShowConfirmPassword((p) => !p)}
                   edge="end"
                   size="small"
@@ -163,8 +164,8 @@ export function ChangePassword() {
           }}
           margin="normal"
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={{ mt: 2 }}>
-          {loading ? 'Changing password...' : 'Change Password'}
+        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={(theme) => theme.custom.authForm.actions}>
+          {loading ? Buttons.CHANGING_PASSWORD : Buttons.CHANGE_PASSWORD}
         </Button>
       </form>
     </Box>

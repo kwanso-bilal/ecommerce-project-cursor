@@ -14,14 +14,16 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import { useNotification } from '../contexts/NotificationContext';
 import { resetPassword } from '../services/api';
+import { ROUTES } from '../constants/routes';
+import { Buttons, Auth, Messages, Errors, VALIDATION } from '../constants';
 
 const schema = z
   .object({
-    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    newPassword: z.string().min(8, VALIDATION.MESSAGES.PASSWORD_MIN_LENGTH),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: VALIDATION.MESSAGES.PASSWORDS_DO_NOT_MATCH,
     path: ['confirmPassword'],
   });
 
@@ -55,40 +57,40 @@ export function ResetPassword() {
     }
     if (data?.success) {
       setSuccess(true);
-      showSuccess(data.message ?? 'Password reset successfully.');
+      showSuccess(data.message ?? Messages.PASSWORD_RESET_SUCCESS);
     }
   };
 
   if (!token) {
     return (
-      <Box sx={{ width: '100%', maxWidth: 400 }}>
+      <Box sx={(theme) => theme.custom.authForm.container}>
         <Typography color="error" sx={{ mb: 2 }}>
-          Missing or invalid reset token.
+          {Errors.MISSING_RESET_TOKEN}
         </Typography>
-        <Link component={RouterLink} to="/forgot-password">
-          Request a new reset link
+        <Link component={RouterLink} to={ROUTES.FORGOT_PASSWORD}>
+          {Buttons.REQUEST_NEW_RESET_LINK}
         </Link>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 400 }}>
+    <Box sx={(theme) => theme.custom.authForm.container}>
       <Typography variant="authTitle" sx={{ mb: 0.5 }}>
-        Reset password
+        {Auth.RESET_PASSWORD_TITLE}
       </Typography>
       <Typography variant="authSubtitle">
-        Enter your new password below
+        {Auth.RESET_PASSWORD_SUBTITLE}
       </Typography>
       {success ? (
         <Typography variant="body2">
-          Your password has been reset. You can now log in.
+          {Messages.PASSWORD_RESET_SUCCESS}
         </Typography>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <TextField
             {...register('newPassword')}
-            label="New password"
+            label={Auth.NEW_PASSWORD}
             type={showPassword ? 'text' : 'password'}
             fullWidth
             error={!!errors.newPassword}
@@ -98,7 +100,7 @@ export function ResetPassword() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                     onClick={() => setShowPassword((p) => !p)}
                     edge="end"
                     size="small"
@@ -112,7 +114,7 @@ export function ResetPassword() {
           />
           <TextField
             {...register('confirmPassword')}
-            label="Confirm password"
+            label={Auth.CONFIRM_PASSWORD}
             type={showConfirm ? 'text' : 'password'}
             fullWidth
             error={!!errors.confirmPassword}
@@ -122,7 +124,7 @@ export function ResetPassword() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                    aria-label={showConfirm ? Auth.HIDE_PASSWORD : Auth.SHOW_PASSWORD}
                     onClick={() => setShowConfirm((p) => !p)}
                     edge="end"
                     size="small"
@@ -134,14 +136,14 @@ export function ResetPassword() {
             }}
             margin="normal"
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={{ mt: 2 }}>
-            {loading ? 'Resetting...' : 'Reset password'}
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={(theme) => theme.custom.authForm.actions}>
+            {loading ? Buttons.RESET_PASSWORD_LOADING : Buttons.RESET_PASSWORD}
           </Button>
         </form>
       )}
-      <Typography sx={{ mt: 2.5 }}>
-        <Link component={RouterLink} to="/login">
-          Back to login
+      <Typography sx={(theme) => theme.custom.authForm.subtitle}>
+        <Link component={RouterLink} to={ROUTES.LOGIN}>
+          {Buttons.BACK_TO_LOGIN}
         </Link>
       </Typography>
     </Box>

@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { getProducts, type Product } from '../services/dashboardApi';
 import { useNotification } from '../contexts/NotificationContext';
 import StarIcon from '@mui/icons-material/Star';
+import { Dashboard as DashboardText } from '../constants';
 
 export function Products() {
   const { showError } = useNotification();
@@ -38,27 +39,27 @@ export function Products() {
   };
 
   const getStockLabel = (stock: number) => {
-    if (stock > 50) return 'In Stock';
-    if (stock > 10) return 'Low Stock';
-    return 'Out of Stock';
+    if (stock > 50) return DashboardText.IN_STOCK;
+    if (stock > 10) return DashboardText.LOW_STOCK;
+    return DashboardText.OUT_OF_STOCK;
   };
 
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Products
+        {DashboardText.PRODUCTS}
       </Typography>
       <Card>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Product</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Brand</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Discount</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Stock</TableCell>
+              <TableCell>{DashboardText.PRODUCT}</TableCell>
+              <TableCell>{DashboardText.CATEGORY}</TableCell>
+              <TableCell>{DashboardText.BRAND}</TableCell>
+              <TableCell>{DashboardText.PRICE}</TableCell>
+              <TableCell>{DashboardText.DISCOUNT}</TableCell>
+              <TableCell>{DashboardText.RATING}</TableCell>
+              <TableCell>{DashboardText.STOCK}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -66,7 +67,7 @@ export function Products() {
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Loading...
+                    {DashboardText.LOADING}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -74,7 +75,7 @@ export function Products() {
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    No products found.
+                    {DashboardText.NO_PRODUCTS}
                   </Typography>
                 </TableCell>
               </TableRow>

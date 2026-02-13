@@ -2,8 +2,9 @@
  * Dashboard data from mock REST APIs.
  * Sidebar menu, KPIs, revenue chart, and recent invoices.
  */
+import { CONFIG, Errors } from '../constants';
 
-const DUMMY_JSON_BASE = 'https://dummyjson.com';
+const API_BASE = CONFIG.API_BASE;
 
 export interface SidebarSection {
   title: string;
@@ -33,16 +34,16 @@ async function request<T>(url: string): Promise<{ data?: T; error?: string }> {
   try {
     const res = await fetch(url);
     const json = await res.json().catch(() => ({}));
-    if (!res.ok) return { error: (json.message ?? json.error ?? 'Request failed') as string };
+    if (!res.ok) return { error: (json.message ?? json.error ?? Errors.REQUEST_FAILED) as string };
     return { data: json as T };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Network error' };
+    return { error: e instanceof Error ? e.message : Errors.NETWORK_ERROR };
   }
 }
 
 /** Sidebar menu structure – labels from mock API (DummyJSON users response shape used to drive menu) */
 export async function getSidebarMenu(): Promise<{ data?: SidebarSection[]; error?: string }> {
-  const { data } = await request<{ total?: number }>(`${DUMMY_JSON_BASE}/users?limit=1`);
+  const { data } = await request<{ total?: number }>(`${API_BASE}/users?limit=1`);
   if (data === undefined) {
     return {
       data: [
@@ -88,8 +89,8 @@ export async function getSidebarMenu(): Promise<{ data?: SidebarSection[]; error
 /** KPI stats – registered orgs from DummyJSON users total, revenue/carts, orders from mock */
 export async function getDashboardStats(): Promise<{ data?: DashboardStats; error?: string }> {
   const [usersRes, cartsRes] = await Promise.all([
-    request<{ total?: number }>(`${DUMMY_JSON_BASE}/users?limit=0`),
-    request<{ carts?: Array<{ total?: number }>; total?: number }>(`${DUMMY_JSON_BASE}/carts`),
+    request<{ total?: number }>(`${API_BASE}/users?limit=0`),
+    request<{ carts?: Array<{ total?: number }>; total?: number }>(`${API_BASE}/carts`),
   ]);
   const userTotal = usersRes.data?.total ?? 84;
   let totalRevenue = 136938;
@@ -109,7 +110,7 @@ export async function getDashboardStats(): Promise<{ data?: DashboardStats; erro
 
 /** Revenue chart – last year vs this year by month (mock from DummyJSON products count as seed) */
 export async function getRevenueChart(): Promise<{ data?: RevenuePoint[]; error?: string }> {
-  const { data } = await request<{ total?: number }>(`${DUMMY_JSON_BASE}/products?limit=0`);
+  const { data } = await request<{ total?: number }>(`${API_BASE}/products?limit=0`);
   const seed = data?.total ?? 100;
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const lastYear = months.map((_, i) => 50000 + (seed * (i + 1) * 3) % 80000);
@@ -143,7 +144,7 @@ export async function getOrganizations(limit = 30, skip = 0): Promise<{ data?: {
       address?: { city?: string; country?: string };
     }>;
     total?: number;
-  }>(`${DUMMY_JSON_BASE}/users?limit=${limit}&skip=${skip}&select=id,email,company,address`);
+  }>(`${API_BASE}/users?limit=${limit}&skip=${skip}&select=id,email,company,address`);
   if (!data?.users?.length) {
     return {
       data: {
@@ -191,7 +192,7 @@ export async function getPayments(limit = 30, skip = 0): Promise<{ data?: { paym
       discountedTotal: number;
     }>;
     total?: number;
-  }>(`${DUMMY_JSON_BASE}/carts?limit=${limit}&skip=${skip}`);
+  }>(`${API_BASE}/carts?limit=${limit}&skip=${skip}`);
   if (!data?.carts?.length) {
     return {
       data: {
@@ -252,7 +253,7 @@ export async function getProducts(limit = 30, skip = 0): Promise<{ data?: { prod
       thumbnail?: string;
     }>;
     total?: number;
-  }>(`${DUMMY_JSON_BASE}/products?limit=${limit}&skip=${skip}&select=id,title,category,price,discountPercentage,rating,stock,brand,thumbnail`);
+  }>(`${API_BASE}/products?limit=${limit}&skip=${skip}&select=id,title,category,price,discountPercentage,rating,stock,brand,thumbnail`);
   if (!data?.products?.length) {
     return {
       data: {
@@ -299,7 +300,7 @@ export async function getOrders(limit = 30, skip = 0): Promise<{ data?: { orders
       userId: number;
     }>;
     total?: number;
-  }>(`${DUMMY_JSON_BASE}/todos?limit=${limit}&skip=${skip}`);
+  }>(`${API_BASE}/todos?limit=${limit}&skip=${skip}`);
   if (!data?.todos?.length) {
     return {
       data: {
@@ -353,7 +354,7 @@ export async function getReviews(limit = 30, skip = 0): Promise<{ data?: { revie
       };
     }>;
     total?: number;
-  }>(`${DUMMY_JSON_BASE}/comments?limit=${limit}&skip=${skip}`);
+  }>(`${API_BASE}/comments?limit=${limit}&skip=${skip}`);
   if (!data?.comments?.length) {
     return {
       data: {
@@ -401,7 +402,7 @@ export async function changePassword(input: {
 /** Recent invoices – company names from DummyJSON users or mock */
 export async function getRecentInvoices(): Promise<{ data?: RecentInvoice[]; error?: string }> {
   const { data } = await request<{ users?: Array<{ company?: { name?: string }; firstName?: string }> }>(
-    `${DUMMY_JSON_BASE}/users?limit=8`
+    `${API_BASE}/users?limit=8`
   );
   const companies = [
     'Aprico',
