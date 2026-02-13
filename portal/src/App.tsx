@@ -1,9 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from './components/Layout';
 import { AuthLayout } from './components/AuthLayout';
 import { DashboardLayout } from './components/DashboardLayout';
 import {
-  Home,
   Login,
   SignUp,
   ForgotPassword,
@@ -18,14 +16,18 @@ import {
   ChangePassword,
 } from './pages';
 import { ROUTES } from './constants/routes';
+import { useAuth } from './hooks/useAuth';
+
+function RedirectByAuth() {
+  const { isAuthenticated } = useAuth();
+  return <Navigate to={isAuthenticated() ? ROUTES.DASHBOARD : ROUTES.LOGIN} replace />;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={ROUTES.HOME} element={<Layout />}>
-          <Route index element={<Home />} />
-        </Route>
+        <Route path={ROUTES.HOME} element={<RedirectByAuth />} />
         <Route element={<AuthLayout />}>
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.SIGNUP} element={<SignUp />} />
