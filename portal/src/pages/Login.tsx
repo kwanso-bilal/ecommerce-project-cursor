@@ -105,17 +105,7 @@ export function Login() {
           }}
           margin="normal"
         />
-        <Box
-          sx={(theme) => ({
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 1,
-            mt: 2,
-            mb: 2,
-          })}
-        >
+        <Box sx={(theme) => ({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, ...theme.custom.authForm.actions, mb: 2 })}>
           <FormControlLabel
             control={<Checkbox defaultChecked />}
             label={

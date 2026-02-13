@@ -29,42 +29,60 @@ export function Layout() {
   return (
     <Box sx={(theme) => theme.custom.layout.root}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton color="inherit" edge="start" aria-label={Labels.MENU} sx={{ mr: 2 }}>
+        <Toolbar
+          disableGutters
+          sx={{
+            px: { xs: 1, sm: 2 },
+            minHeight: { xs: 56, sm: 64 },
+            flexWrap: 'wrap',
+            gap: 0.5,
+          }}
+        >
+          <IconButton color="inherit" edge="start" aria-label={Labels.MENU} sx={{ mr: { xs: 0.5, sm: 2 } }}>
             <MenuIcon />
           </IconButton>
-          <Typography component={RouterLink} to={ROUTES.HOME} variant="h6" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
+          <Typography
+            component={RouterLink}
+            to={ROUTES.HOME}
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              textDecoration: 'none',
+              color: 'inherit',
+              fontSize: { xs: '1rem', sm: '1.25rem' },
+            }}
+          >
             {CONFIG.APP_NAME}
           </Typography>
           {isAuthenticated() ? (
-            <Button color="inherit" onClick={handleLogout}>
+            <Button color="inherit" onClick={handleLogout} size="small">
               {Buttons.LOGOUT}
             </Button>
           ) : (
-            <Button component={RouterLink} to={ROUTES.LOGIN} color="inherit">
+            <Button component={RouterLink} to={ROUTES.LOGIN} color="inherit" size="small">
               {Buttons.LOGIN}
             </Button>
           )}
-          <IconButton color="inherit" aria-label={Labels.SEARCH}>
-            <SearchIcon />
+          <IconButton color="inherit" aria-label={Labels.SEARCH} size="small">
+            <SearchIcon fontSize="small" />
           </IconButton>
-          <IconButton color="inherit" aria-label={Labels.CART}>
-            <ShoppingCartIcon />
+          <IconButton color="inherit" aria-label={Labels.CART} size="small">
+            <ShoppingCartIcon fontSize="small" />
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Container component="main" sx={(theme) => theme.custom.layout.main}>
+      <Container component="main" maxWidth="lg" sx={(theme) => ({ ...theme.custom.layout.main, px: { xs: 2, sm: 3 } })}>
         <Outlet />
       </Container>
       <Box
         component="footer"
         sx={(theme) => ({
           ...theme.custom.layout.footer,
-          backgroundColor:
-            theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+          backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+          px: { xs: 2, sm: 3 },
         })}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" disableGutters>
           <Typography variant="body2" color="text.secondary" align="center">
             © {CONFIG.APP_NAME}
           </Typography>

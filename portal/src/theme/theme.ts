@@ -52,6 +52,10 @@ declare module '@mui/material/styles' {
         logoutButton: Record<string, unknown>;
       };
       dashboardContent: { padding: number };
+      pageTitle: { marginBottom: number };
+      cardIconBox: Record<string, unknown>;
+      cardHeader: Record<string, unknown>;
+      chartCardContent: Record<string, unknown>;
     };
   }
   interface ThemeOptions {
@@ -63,6 +67,7 @@ declare module '@mui/material/styles' {
     formLabel: React.CSSProperties;
     sectionTitle: React.CSSProperties;
     cardValue: React.CSSProperties;
+    pageTitle: React.CSSProperties;
     sidebarLogo: React.CSSProperties;
     sidebarSection: React.CSSProperties;
     sidebarNav: React.CSSProperties;
@@ -73,6 +78,7 @@ declare module '@mui/material/styles' {
     formLabel?: React.CSSProperties;
     sectionTitle?: React.CSSProperties;
     cardValue?: React.CSSProperties;
+    pageTitle?: React.CSSProperties;
     sidebarLogo?: React.CSSProperties;
     sidebarSection?: React.CSSProperties;
     sidebarNav?: React.CSSProperties;
@@ -86,6 +92,7 @@ declare module '@mui/material/Typography' {
     formLabel: true;
     sectionTitle: true;
     cardValue: true;
+    pageTitle: true;
     sidebarLogo: true;
     sidebarSection: true;
     sidebarNav: true;
@@ -134,6 +141,7 @@ export const theme = createTheme({
     authSubtitle: { color: grey500, fontSize: '0.9375rem', marginBottom: 24 },
     formLabel: { color: grey500, fontSize: '0.875rem' },
     sectionTitle: { fontWeight: 600, color: grey700, fontSize: '0.875rem' },
+    pageTitle: { fontWeight: 600, color: grey700, fontSize: '1.25rem', marginBottom: 24 },
     cardValue: { fontWeight: 700, color: grey700, fontSize: '1.5rem' },
     body2: { color: grey500, fontSize: '0.875rem' },
     caption: { fontSize: '0.75rem', color: grey500 },
@@ -288,6 +296,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          overflowX: 'auto',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          boxSizing: 'border-box',
+        },
+      },
+    },
     MuiTypography: {
       styleOverrides: {
         root: {
@@ -342,6 +364,30 @@ export const theme = createTheme({
       },
     },
     dashboardContent: { padding: 3 },
+    pageTitle: { marginBottom: 24 },
+    cardIconBox: {
+      width: 48,
+      height: 48,
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      mb: 1,
+    },
+    cardHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: 1,
+      p: 2,
+      borderBottom: `1px solid ${grey200}`,
+    },
+    chartCardContent: {
+      p: 2,
+      height: 320,
+      flex: 1,
+    },
   },
 });
 

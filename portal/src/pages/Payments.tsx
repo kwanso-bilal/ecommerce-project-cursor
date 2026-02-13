@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -46,10 +47,11 @@ export function Payments() {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Typography variant="pageTitle" component="h1">
         {DashboardText.PAYMENTS}
       </Typography>
       <Card>
+        <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -107,6 +109,7 @@ export function Payments() {
             )}
           </TableBody>
         </Table>
+        </TableContainer>
       </Card>
     </Box>
   );

@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -46,10 +47,11 @@ export function Products() {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+      <Typography variant="pageTitle" component="h1">
         {DashboardText.PRODUCTS}
       </Typography>
       <Card>
+        <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -83,16 +85,16 @@ export function Products() {
               products.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0 }}>
                       {product.thumbnail && (
                         <Avatar
                           src={product.thumbnail}
                           alt={product.title}
                           variant="rounded"
-                          sx={{ width: 40, height: 40 }}
+                          sx={{ width: 40, height: 40, flexShrink: 0 }}
                         />
                       )}
-                      <Typography sx={{ fontWeight: 500, maxWidth: 300 }} noWrap>
+                      <Typography variant="body2" fontWeight={500} noWrap sx={{ minWidth: 0 }}>
                         {product.title}
                       </Typography>
                     </Box>
@@ -103,7 +105,7 @@ export function Products() {
                   <TableCell>{product.brand}</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>${product.price.toFixed(2)}</TableCell>
                   <TableCell>
-                    <Typography color="error.main" sx={{ fontWeight: 500 }}>
+                    <Typography color="error.main" fontWeight={500}>
                       -{product.discountPercentage.toFixed(1)}%
                     </Typography>
                   </TableCell>
@@ -126,6 +128,7 @@ export function Products() {
             )}
           </TableBody>
         </Table>
+        </TableContainer>
       </Card>
     </Box>
   );

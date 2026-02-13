@@ -13,7 +13,9 @@ export function Home() {
   }
   return (
     <Box>
-      <Typography variant="h1">{General.HOME}</Typography>
+      <Typography variant="h1" sx={{ fontSize: { xs: '1.75rem', sm: '2.5rem' } }}>
+        {General.HOME}
+      </Typography>
       <Box sx={(theme) => theme.custom.homeActions}>
         <Button component={Link} to={ROUTES.LOGIN} variant="outlined" sx={(theme) => theme.custom.homeButton}>
           {Buttons.LOGIN}

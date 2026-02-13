@@ -65,11 +65,11 @@ export function ChangePassword() {
 
   if (success) {
     return (
-      <Box sx={(theme) => theme.custom.authFormNarrow}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
+      <Box sx={(theme) => ({ ...theme.custom.authFormNarrow, width: '100%' })}>
+        <Typography variant="pageTitle" component="h1" sx={(theme) => ({ mb: theme.custom.verifyTitle.marginBottom })}>
           {Dashboard.CHANGE_PASSWORD_TITLE}
         </Typography>
-        <Typography variant="body2" color="success.main" sx={{ mb: 2 }}>
+        <Typography variant="body2" color="success.main" sx={(theme) => ({ mb: theme.custom.verifyTitle.marginBottom })}>
           {Dashboard.PASSWORD_CHANGED_SUCCESS}
         </Typography>
         <Button
@@ -87,8 +87,8 @@ export function ChangePassword() {
   }
 
   return (
-    <Box sx={(theme) => theme.custom.authFormNarrow}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
+    <Box sx={(theme) => ({ ...theme.custom.authFormNarrow, width: '100%' })}>
+      <Typography variant="pageTitle" component="h1">
         {Dashboard.CHANGE_PASSWORD_TITLE}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
